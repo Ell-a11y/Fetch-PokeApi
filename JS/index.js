@@ -2,20 +2,12 @@
 const contenedor = document.getElementById("contenedor-pokes");
 const select = document.querySelector("select");
 const pagSig = document.querySelector("#sigPag");
-
+const pagAnt = document.querySelector("#antPag");
 // Variables LET
 let pokemon = null;
-let valorSelect = Number(select.value);
-let numPagina = valorSelect;
+let numPagina = 1;
 
 // FUNCIONES ANONIMAS CONST
-const mesInfo = function() {
-    let poke = this.textContent;
-    console.log(poke);
-    poke = poke[0];
-    console.log(poke);
-    window.open(`./html/pokemon.html?id=${poke}`, "Pokemons", "width=400,height=400");
-}
 const creadorObj = function(obj) {
     const divNew = document.createElement("article");
     const imgNew = document.createElement("img");
@@ -29,33 +21,44 @@ const creadorObj = function(obj) {
     divNew.appendChild(imgNew);
     divNew.appendChild(buttonNew);
 }
-const genPokes = async function(num, bool) {
+const genPokes = async function() {
     contenedor.textContent = "";
-    for(let x = 1; x<=num; x++) {
-        await obtenerPoke(x, bool);
+    for(let x = numPagina; x<Number(select.value)+numPagina; x++) {
+        await obtenerPoke(x);
     }
 }
-
-const sigPagina = async function(num, bool) {
+const sigPagina = async function(num) {
     contenedor.textContent = "";
-    for(let x = 1; x<=num; x++) {
-        numPagina++;
-        await obtenerPoke(numPagina, bool);
+    numPagina = Number(numPagina)+Number(num);
+    for(let x = numPagina; x<numPagina+num; x++) {
+        await obtenerPoke(x);
     }
-
+}
+const antPagina = async function(num) {
+    contenedor.textContent = "";
+    if(numPagina > Number(select.value) || Number(numPagina)-Number(num) >= 1) {
+        console.log(numPagina)
+        for(let x = numPagina-num; x<numPagina; x++) {
+            await obtenerPoke(x);
+        }
+        numPagina = Number(numPagina)-Number(num);
+    } else {
+        for(let x = 1; x <= num; x++) {
+            await obtenerPoke(x);
+        }
+    }
 }
 
 // Promesas FETCH
-const obtenerPoke = async function(id, bool) {
+const obtenerPoke = async function(id) {
     const tmp = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
     const obj = await tmp.json();
-    if(bool) {
-        creadorObj(obj);
-    }
+    creadorObj(obj);
 }
 // AddEventListener
-select.addEventListener("change", ()=>genPokes(valorSelect, true));
-pagSig.addEventListener("click", ()=>sigPagina(valorSelect, true));
+select.addEventListener("change", genPokes);
+pagSig.addEventListener("click", ()=>sigPagina(Number(select.value)));
+pagAnt.addEventListener("click", ()=>antPagina(Number(select.value)));
 
 // Funcions automaticas
-genPokes(select.value, true);
+genPokes(select.value, false);
