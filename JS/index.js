@@ -2,27 +2,32 @@
 const contenedor = document.getElementById("contenedor-pokes");
 const select = document.querySelector("select");
 const pagSig = document.querySelector("#sigPag");
-const button = document.getElementById("Shiny");
+
 // Variables LET
 let pokemon = null;
-let shiny = true;
 let valorSelect = Number(select.value);
 let numPagina = valorSelect;
 
 // FUNCIONES ANONIMAS CONST
-const creadorObj = function(obj, bool) {
+const mesInfo = function() {
+    let poke = this.textContent;
+    console.log(poke);
+    poke = poke[0];
+    console.log(poke);
+    window.open(`./html/pokemon.html?id=${poke}`, "Pokemons", "width=400,height=400");
+}
+const creadorObj = function(obj) {
     const divNew = document.createElement("article");
     const imgNew = document.createElement("img");
-    const pNew = document.createElement("p");
-    pNew.textContent = obj.id + ". " + obj.name;
+    const buttonNew = document.createElement("button");
+    buttonNew.textContent = obj.id + ". " + obj.name;
     imgNew.src = obj.sprites.front_default;
-    if(!bool) {
-        imgNew.src = obj.sprites.front_shiny;
-    }
     divNew.classList = ("pokemons");
+    buttonNew.classList = ("info");
+    buttonNew.addEventListener("click", mesInfo);
     contenedor.appendChild(divNew);
     divNew.appendChild(imgNew);
-    divNew.appendChild(pNew);
+    divNew.appendChild(buttonNew);
 }
 const genPokes = async function(num, bool) {
     contenedor.textContent = "";
@@ -30,10 +35,7 @@ const genPokes = async function(num, bool) {
         await obtenerPoke(x, bool);
     }
 }
-const convShiny = function(num, bool) {
-    shiny = !shiny;
-    genPokes(num, bool);
-}
+
 const sigPagina = async function(num, bool) {
     contenedor.textContent = "";
     for(let x = 1; x<=num; x++) {
@@ -47,12 +49,13 @@ const sigPagina = async function(num, bool) {
 const obtenerPoke = async function(id, bool) {
     const tmp = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
     const obj = await tmp.json();
-    creadorObj(obj, bool);
+    if(bool) {
+        creadorObj(obj);
+    }
 }
 // AddEventListener
-select.addEventListener("change", ()=>genPokes(valorSelect, shiny));
-button.addEventListener("click", ()=>convShiny(valorSelect, shiny));
-pagSig.addEventListener("click", ()=>sigPagina(valorSelect, shiny));
+select.addEventListener("change", ()=>genPokes(valorSelect, true));
+pagSig.addEventListener("click", ()=>sigPagina(valorSelect, true));
 
 // Funcions automaticas
-genPokes(select.value, shiny);
+genPokes(select.value, true);

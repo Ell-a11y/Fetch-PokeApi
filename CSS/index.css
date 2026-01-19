@@ -15,9 +15,9 @@
     justify-content: center;
     gap: 10px;
 }
-p {
+.info {
     font-weight: 900;
-    font-size: 150%;
+    font-size: 90%;
 }
 img {
     width: 100%;
