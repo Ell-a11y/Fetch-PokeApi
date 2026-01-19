@@ -16,7 +16,7 @@ const creadorObj = function(obj) {
     imgNew.src = obj.sprites.front_default;
     divNew.classList = ("pokemons");
     buttonNew.classList = ("info");
-    buttonNew.addEventListener("click", mesInfo);
+    buttonNew.addEventListener("click", console.log("hola"));
     contenedor.appendChild(divNew);
     divNew.appendChild(imgNew);
     divNew.appendChild(buttonNew);
