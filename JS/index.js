@@ -8,6 +8,12 @@ let pokemon = null;
 let numPagina = 1;
 
 // FUNCIONES ANONIMAS CONST
+const mesInfo = function() {
+    let poke = this.textContent;
+    poke = poke[0];
+    window.open(`./html/pokemon.html?id=${poke}`, "Pokemons", "width=400,height=400");
+}
+
 const creadorObj = function(obj) {
     const divNew = document.createElement("article");
     const imgNew = document.createElement("img");
@@ -16,7 +22,7 @@ const creadorObj = function(obj) {
     imgNew.src = obj.sprites.front_default;
     divNew.classList = ("pokemons");
     buttonNew.classList = ("info");
-    buttonNew.addEventListener("click", console.log("hola"));
+    buttonNew.addEventListener("click", mesInfo);
     contenedor.appendChild(divNew);
     divNew.appendChild(imgNew);
     divNew.appendChild(buttonNew);
@@ -37,7 +43,6 @@ const sigPagina = async function(num) {
 const antPagina = async function(num) {
     contenedor.textContent = "";
     if(numPagina > Number(select.value) || Number(numPagina)-Number(num) >= 1) {
-        console.log(numPagina)
         for(let x = numPagina-num; x<numPagina; x++) {
             await obtenerPoke(x);
         }
