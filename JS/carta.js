@@ -25,7 +25,6 @@ const tabla = function(obj){
     //     }
     // }
     // card.appendChild(table);
-
 }
 const creadorCarta = function(obj) {
     cardH1.textContent = obj.id +". "+ obj.name;
